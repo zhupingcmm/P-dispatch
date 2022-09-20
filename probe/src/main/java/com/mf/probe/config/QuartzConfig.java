@@ -1,0 +1,26 @@
+package com.mf.probe.config;
+
+
+import com.mf.probe.quartz.HeartbeatJob;
+import org.quartz.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class QuartzConfig {
+
+    @Bean
+    public JobDetail heartbeat () {
+        return JobBuilder.newJob(HeartbeatJob.class).withIdentity("heartbeat").storeDurably(true).build();
+    }
+
+    @Bean
+    public Trigger trigger () {
+        return TriggerBuilder.newTrigger()
+                .forJob(heartbeat())
+                .withIdentity("heartbeat")
+                .withSchedule(CronScheduleBuilder.cronSchedule("*/5 * * * * ?"))
+                .build();
+    }
+
+}

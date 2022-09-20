@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: probe
+  kafka:
+    bootstrap-servers: localhost:9902
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 0
+    listener:
+      ack-mode: manual_immediate
+      missing-topics-fatal: false
+    consumer:
+      isolation-level: read_committed
+  quartz:
+    job-store-type: memory
+
+server:
+  port: 8081
