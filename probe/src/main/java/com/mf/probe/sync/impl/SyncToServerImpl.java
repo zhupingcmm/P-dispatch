@@ -1,5 +1,6 @@
 package com.mf.probe.sync.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.mf.dispatch.common.base.ProbeInfo;
 import com.mf.dispatch.common.constants.Constants;
 import com.mf.probe.sync.SyncToServer;
@@ -19,14 +20,14 @@ import java.util.concurrent.TimeoutException;
 @RequiredArgsConstructor
 public class SyncToServerImpl<T extends ProbeInfo> implements SyncToServer<T> {
 
-    private final KafkaTemplate<String, T> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
-    public void syncToServer(ProbeInfo probeInfo) {
-        ListenableFuture<SendResult<String, T>> future =  kafkaTemplate.send(Constants.PROBE_INFO_TOPIC, (T) probeInfo);
+    public void syncToServer(T probeInfo) {
+        ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(Constants.PROBE_INFO_TOPIC, JSON.toJSONString(probeInfo));
         try {
-           SendResult<String, T> result = future.get(2, TimeUnit.SECONDS);
-           log.info("Send probe info to server: {}", result.toString());
+           SendResult<String, String> result = future.get(2, TimeUnit.SECONDS);
+           log.info("Success send probe info to server: {}", result.toString());
         } catch (InterruptedException | RuntimeException | ExecutionException | TimeoutException e) {
             log.error(e.getMessage());
         }

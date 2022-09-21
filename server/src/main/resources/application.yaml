@@ -1,23 +1,18 @@
 spring:
   application:
-    name: probe
+    name: server
   kafka:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      retries: 0
+      retries: 1
     listener:
       ack-mode: manual_immediate
       missing-topics-fatal: false
     consumer:
       isolation-level: read_committed
-  quartz:
-    job-store-type: memory
+      group-id: test-consumer-group
 
 server:
-  port: 8081
-
-probe:
-  id: 1
-  customer-id: 1
+  port: 8082
