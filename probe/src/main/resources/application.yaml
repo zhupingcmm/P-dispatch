@@ -17,3 +17,7 @@ spring:
 
 server:
   port: 8081
+
+probe:
+  id: 1
+  customer-id: 1

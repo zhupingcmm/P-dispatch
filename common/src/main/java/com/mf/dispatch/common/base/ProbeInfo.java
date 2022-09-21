@@ -1,11 +1,13 @@
 package com.mf.dispatch.common.base;
 
 
+import com.mf.dispatch.common.base.os.SystemHardwareInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,28 +28,15 @@ public class ProbeInfo extends BaseBean {
     private long probeId;
 
     /**
-     * probe ip address
+     * the probe system info
      */
-    private String ip;
-    /**
-     * probe hostname
-     */
-    private String hostname;
+
+    private SystemHardwareInfo systemInfo;
 
     /**
-     * probe cpu
+     * probe task queue
      */
-    private double cpu;
-
-    /**
-     *
-     * probe io
-     */
-    private String io;
-    /**
-     * probe memory
-     */
-    private String memory;
+    private LinkedList<Task> taskQueue = new LinkedList<>();
 
     /**
      * the extra info from probe

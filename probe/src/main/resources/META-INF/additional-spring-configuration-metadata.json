@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "probe.customer-id",
+      "type": "java.lang.String",
+      "description": "Description for probe.customer-id."
+    },
+    {
+      "name": "probe.id",
+      "type": "java.lang.String",
+      "description": "Description for probe.id."
+    }
+  ] }

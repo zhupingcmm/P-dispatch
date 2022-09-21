@@ -10,9 +10,12 @@ public class Task extends BaseBean {
      */
     private long probeId;
 
+
+
     /**
      * task info (run job)
      */
-
     private String jobName;
+
+
 }
