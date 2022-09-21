@@ -1,9 +1,10 @@
 package com.mf.dispatch.common.base.os;
 
+import com.mf.dispatch.common.base.BaseBean;
 import lombok.Data;
 
 @Data
-public class SystemFile {
+public class SystemFile  extends BaseBean {
 
     /**
      * 盘符路径
@@ -21,19 +22,19 @@ public class SystemFile {
     private String typeName;
 
     /**
-     * 总大小
+     * 总大小 单位mb
      */
-    private String total;
+    private double total;
 
     /**
-     * 剩余大小
+     * 剩余大小 单位mb
      */
-    private String free;
+    private double free;
 
     /**
-     * 已经使用量
+     * 已经使用量 单位mb
      */
-    private String used;
+    private double used;
 
     /**
      * 资源的使用率

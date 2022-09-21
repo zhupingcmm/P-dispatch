@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mf.server.mapper.ProbeInfoMapper">
+    <resultMap id="ProbeInfoMap" type="com.mf.server.model.ProbeInfoDo">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="probe_id" property="probeId" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="selectProbeInfoByProbeId" resultMap="ProbeInfoMap">
+        select * from `server`.tb_probe_info
+        where probe_id = #{probeId}
+    </select>
+    <update id="updateProbeInfo">
+        update `server`.tb_probe_info
+        set
+            customer_id = #{customerId},
+            probe_id = #{probeId}
+        where id =#{id}
+    </update>
+    <insert id="insertProbeInfo">
+        insert into `server`.tb_probe_info
+            (
+                customer_id,
+                probe_id
+            )
+        values
+            (
+             #{customerId},
+             #{probeId}
+            )
+    </insert>
+</mapper>

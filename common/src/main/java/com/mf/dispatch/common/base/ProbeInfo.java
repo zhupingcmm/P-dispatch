@@ -33,13 +33,14 @@ public class ProbeInfo extends BaseBean {
 
     private SystemHardwareInfo systemInfo;
 
+
     /**
      * probe task queue
      */
     private LinkedList<Task> taskQueue = new LinkedList<>();
 
-    /**
-     * the extra info from probe
-     */
-    private Map<String, Object> extra = new ConcurrentHashMap<>();
+//    /**
+//     * the extra info from probe
+//     */
+//    private Map<String, Object> extra = new ConcurrentHashMap<>();
 }

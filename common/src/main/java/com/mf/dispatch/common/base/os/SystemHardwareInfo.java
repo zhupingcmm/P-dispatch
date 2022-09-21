@@ -26,7 +26,7 @@ public class SystemHardwareInfo extends BaseBean {
     private Jvm jvm = new Jvm();
     private Memory memory = new Memory();
     private OsInfo osInfo = new OsInfo();
-    private List<SystemFile> systemFiles = new ArrayList<>();
+//    private List<SystemFile> systemFiles = new ArrayList<>();
 
 
     public SystemHardwareInfo () {
@@ -37,7 +37,7 @@ public class SystemHardwareInfo extends BaseBean {
         updateMemory(hardware.getMemory());
         updateOsInfo();
         updateJvmInfo();
-        updateSystemFiles(systemInfo.getOperatingSystem());
+//        updateSystemFiles(systemInfo.getOperatingSystem());
     }
 
     /**
@@ -98,46 +98,35 @@ public class SystemHardwareInfo extends BaseBean {
     /**
      * 设置磁盘信息
      */
-    private void updateSystemFiles(OperatingSystem os) {
-        FileSystem fileSystem = os.getFileSystem();
-        List<OSFileStore> fsArray = fileSystem.getFileStores();
-        for (OSFileStore fs : fsArray) {
-            SystemFile systemFile = new SystemFile();
-            long free = fs.getUsableSpace();
-            long total = fs.getTotalSpace();
-            long used = total - free;
-            systemFile.setDirName(fs.getMount());
-            systemFile.setSysTypeName(fs.getType());
-            systemFile.setTypeName(fs.getName());
-            systemFile.setTotal(convertFileSize(total));
-            systemFile.setFree(convertFileSize(free));
-            systemFile.setUsed(convertFileSize(used));
-            systemFile.setUsage(NumberUtil.round(NumberUtil.mul(used, total, 4), 100).doubleValue());
-            systemFiles.add(systemFile);
-        }
-    }
+//    private void updateSystemFiles(OperatingSystem os) {
+//        FileSystem fileSystem = os.getFileSystem();
+//        List<OSFileStore> fsArray = fileSystem.getFileStores();
+//        for (OSFileStore fs : fsArray) {
+//            SystemFile systemFile = new SystemFile();
+//            long free = fs.getUsableSpace();
+//            long total = fs.getTotalSpace();
+//            long used = total - free;
+//            systemFile.setDirName(fs.getMount());
+//            systemFile.setSysTypeName(fs.getType());
+//            systemFile.setTypeName(fs.getName());
+//            systemFile.setTotal(convertFileSize(total));
+//            systemFile.setFree(convertFileSize(free));
+//            systemFile.setUsed(convertFileSize(used));
+//            systemFile.setUsage(NumberUtil.round(NumberUtil.mul(used, total, 4), 100).doubleValue());
+////            systemFiles.add(systemFile);
+//        }
+//    }
 
     /**
      * 字节转换
      *
      * @param size 字节大小
-     * @return 转换后值
+     * @return 转换后值 单位mb
      */
-    private String convertFileSize(long size) {
-        long kb = 1024;
-        long mb = kb * 1024;
-        long gb = mb * 1024;
-        if (size >= gb) {
-            return String.format("%.1f GB", (float) size / gb);
-        } else if (size >= mb) {
-            float f = (float) size / mb;
-            return String.format(f > 100 ? "%.0f MB" : "%.1f MB", f);
-        } else if (size >= kb) {
-            float f = (float) size / kb;
-            return String.format(f > 100 ? "%.0f KB" : "%.1f KB", f);
-        } else {
-            return String.format("%d B", size);
-        }
-    }
+//    private long convertFileSize(long size) {
+//        long kb = 1024;
+//        long mb = kb * 1024;
+//        return size / mb;
+//    }
 
 }

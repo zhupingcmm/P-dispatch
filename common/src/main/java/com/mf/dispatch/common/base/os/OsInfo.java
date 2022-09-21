@@ -1,9 +1,10 @@
 package com.mf.dispatch.common.base.os;
 
+import com.mf.dispatch.common.base.BaseBean;
 import lombok.Data;
 
 @Data
-public class OsInfo {
+public class OsInfo extends BaseBean {
     /**
      * 服务器名称
      */

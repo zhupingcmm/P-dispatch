@@ -17,7 +17,13 @@ spring:
 
 server:
   port: 8081
-
+  servlet:
+    context-path: /probe
+logging:
+  level:
+    root: info
+  file:
+    name: logs/probe.log
 probe:
   id: 1
   customer-id: 1
