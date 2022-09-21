@@ -1,12 +1,13 @@
 package com.mf.server.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.mf.dispatch.common.base.ProbeInfo;
 import com.mf.server.mapper.ProbeInfoMapper;
 import com.mf.server.model.ProbeInfoDo;
 import com.mf.server.service.ProbeInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,9 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
                    .probeId(probeInfo.getProbeId())
                    .build());
        } else {
-           probeInfoDo.setCustomerId(probeInfoDo.getCustomerId());
+           probeInfoDo.setCustomerId(probeInfo.getCustomerId());
+           probeInfoDo.setProbeId(probeInfo.getProbeId());
+           probeInfoDo.setUpdateTime(new Date(System.currentTimeMillis()));
            probeInfoMapper.updateProbeInfo(probeInfoDo);
        }
 

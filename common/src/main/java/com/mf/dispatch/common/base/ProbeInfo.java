@@ -33,6 +33,12 @@ public class ProbeInfo extends BaseBean {
 
     private SystemHardwareInfo systemInfo;
 
+    /**
+     * the probe status 0 active 1 disconnect
+     */
+
+    private int status;
+
 
     /**
      * probe task queue

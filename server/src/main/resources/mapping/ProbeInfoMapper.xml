@@ -5,6 +5,7 @@
         <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="probe_id" property="probeId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
     </resultMap>
     <select id="selectProbeInfoByProbeId" resultMap="ProbeInfoMap">
         select * from `server`.tb_probe_info
@@ -14,19 +15,22 @@
         update `server`.tb_probe_info
         set
             customer_id = #{customerId},
-            probe_id = #{probeId}
+            probe_id = #{probeId},
+            update_time = #{updateTime}
         where id =#{id}
     </update>
     <insert id="insertProbeInfo">
         insert into `server`.tb_probe_info
             (
                 customer_id,
-                probe_id
+                probe_id,
+                status
             )
         values
             (
              #{customerId},
-             #{probeId}
+             #{probeId},
+             #{status}
             )
     </insert>
 </mapper>
