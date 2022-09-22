@@ -2,3 +2,4 @@
 **/.mvn/
 **/target
 logs
+/common/target/classes/
