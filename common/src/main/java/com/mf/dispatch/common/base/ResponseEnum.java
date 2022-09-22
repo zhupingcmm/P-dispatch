@@ -6,7 +6,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ResponseEnum {
 
-    SEND_DATA_ERROR(1, "send message error");
+    SEND_DATA_ERROR(1, "send message error"),
+    NO_ROWS_AFFECTED(2, "failed update"),
+    TOO_MANY_ROWS_AFFECTED(3, "have affect other data"),
+    NOT_TOTAL_ROWS_AFFECTED(4, "data is missing"),
+
+    FAILED_TO_TRANSFORM(5, "failed to transform");
 
     @Getter
     private int code;

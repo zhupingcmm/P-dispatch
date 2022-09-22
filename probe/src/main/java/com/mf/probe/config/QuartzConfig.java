@@ -18,7 +18,6 @@ public class QuartzConfig {
 
     /**
      * 心跳的设置
-     * @return
      */
     @Bean
     public Trigger trigger () {
