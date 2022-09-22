@@ -77,7 +77,7 @@ CREATE TABLE server.tb_probe_task_queue (
     probe_info_id INT,
     probe_id INT,
     job_name TEXT,
-    status INT,
+    status INT DEFAULT 5,
     create_time datetime default current_timestamp comment 'create time',
     update_time datetime default current_timestamp on update current_timestamp comment 'update time',
     CONSTRAINT fk_tb_probe_info_task FOREIGN KEY (probe_info_id) REFERENCES server.tb_probe_info(id)

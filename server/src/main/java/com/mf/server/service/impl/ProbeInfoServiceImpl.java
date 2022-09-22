@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,14 +32,13 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
 
     private final ProbeInfoJvmMapper jvmMapper;
 
+    private final ProbeTaskMapper taskMapper;
+
     @Override
     @Transactional
     public void updateProbeInfo(ProbeInfo probeInfo) {
         // 通过probe id 获取 probe 信息
        ProbeInfoDo probeInfoDo =  probeInfoMapper.selectProbeInfoByProbeId(probeInfo.getProbeId());
-
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
 
        // 如果没有获取到 probe 的信息那就进行插入操作， 如果获取到了 就进行更新操作
        if (probeInfoDo == null) {
@@ -65,10 +65,18 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
            osInfoDo.setProbeInfoId(probeInfoDo.getProbeId());
            osMapper.addProbeOsInfo(osInfoDo);
 
-           // 5 插入 数据到 tb_probe_jvm
+           // 5. 插入 数据到 tb_probe_jvm
            JvmDo jvmDo = ObjectTransform.transform(probeInfo.getSystemInfo().getJvm(), JvmDo.class);
            jvmDo.setProbeInfoId(probeInfoDo.getProbeId());
            jvmMapper.addProbeJvmInfo(jvmDo);
+
+           // 6. 插入到 tb_probe_task_queue
+           List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
+           if (!taskDos.isEmpty()) {
+               taskMapper.addProbeTaskInfo(taskDos);
+           }
+
+
 
        } else {
            // 更新
@@ -94,10 +102,17 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
            osInfoDo.setProbeInfoId(probeInfoDo.getProbeId());
            osMapper.updateProbeOsInfo(osInfoDo);
 
-           // 5 更新数据到 tb_probe_jvm
+           // 5. 更新数据到 tb_probe_jvm
            JvmDo jvmDo = ObjectTransform.transform(probeInfo.getSystemInfo().getJvm(), JvmDo.class);
            jvmDo.setProbeInfoId(probeInfoDo.getProbeId());
            jvmMapper.updateProbeJvmInfo(jvmDo);
+
+           //6. 更新数据到 tb_probe_task_queue
+           List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
+           if (!taskDos.isEmpty()){
+               taskMapper.updateTaskInfo(taskDos);
+           }
+
 
        }
 

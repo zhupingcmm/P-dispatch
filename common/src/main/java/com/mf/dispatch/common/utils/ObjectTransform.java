@@ -36,11 +36,13 @@ public class ObjectTransform {
      * @return 返回 转换后的数据
      * @param <T> 目标数据类型
      */
-    public static <T>List<T> transform(List<T> list, Class<T> clazz){
+    public static <T> List<T> transform(List<?> list, Class<T> clazz){
         if (list == null) list = new ArrayList<>();
         List<T> result = new ArrayList<>();
 
         list.forEach(x -> result.add(transform(x, clazz)));
         return result;
     }
+
+
 }
