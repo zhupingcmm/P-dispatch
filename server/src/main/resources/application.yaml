@@ -18,6 +18,7 @@ spring:
     consumer:
       isolation-level: read_committed
       group-id: test-consumer-group
+#      enable-auto-commit: true
 
 server:
   port: 8082

@@ -25,5 +25,5 @@ logging:
   file:
     name: logs/probe.log
 probe:
-  id: 1
-  customer-id: 1
+  id: 2
+  customer-id: 2

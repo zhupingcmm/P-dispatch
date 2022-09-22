@@ -10,9 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,17 +59,20 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
 
            // 4. 插入 数据到 tb_probe_os
            OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getSystemInfo().getOsInfo(), OsInfoDo.class);
-           osInfoDo.setProbeInfoId(probeInfoDo.getProbeId());
+           osInfoDo.setProbeInfoId(probeInfoDo.getId());
            osMapper.addProbeOsInfo(osInfoDo);
 
            // 5. 插入 数据到 tb_probe_jvm
            JvmDo jvmDo = ObjectTransform.transform(probeInfo.getSystemInfo().getJvm(), JvmDo.class);
-           jvmDo.setProbeInfoId(probeInfoDo.getProbeId());
+           jvmDo.setProbeInfoId(probeInfoDo.getId());
            jvmMapper.addProbeJvmInfo(jvmDo);
 
            // 6. 插入到 tb_probe_task_queue
            List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
+
            if (!taskDos.isEmpty()) {
+               long probeInfoId = probeInfoDo.getId();
+               taskDos.forEach(x -> x.setProbeInfoId(probeInfoId));
                taskMapper.addProbeTaskInfo(taskDos);
            }
 
@@ -99,17 +99,19 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
 
            //4. 更新数据到 tb_probe_os
            OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getSystemInfo().getOsInfo(), OsInfoDo.class);
-           osInfoDo.setProbeInfoId(probeInfoDo.getProbeId());
+           osInfoDo.setProbeInfoId(probeInfoDo.getId());
            osMapper.updateProbeOsInfo(osInfoDo);
 
            // 5. 更新数据到 tb_probe_jvm
            JvmDo jvmDo = ObjectTransform.transform(probeInfo.getSystemInfo().getJvm(), JvmDo.class);
-           jvmDo.setProbeInfoId(probeInfoDo.getProbeId());
+           jvmDo.setProbeInfoId(probeInfoDo.getId());
            jvmMapper.updateProbeJvmInfo(jvmDo);
 
            //6. 更新数据到 tb_probe_task_queue
            List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
            if (!taskDos.isEmpty()){
+               long probeInfoId = probeInfoDo.getId();
+               taskDos.forEach(x -> x.setProbeInfoId(probeInfoId));
                taskMapper.updateTaskInfo(taskDos);
            }
 

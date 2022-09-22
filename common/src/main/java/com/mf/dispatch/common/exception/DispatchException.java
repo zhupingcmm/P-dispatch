@@ -21,4 +21,10 @@ public class DispatchException extends RuntimeException{
         this.code = responseEnum.getCode();
         this.message = responseEnum.getMessage();
     }
+
+    public DispatchException(Exception exception){
+       this.message = exception.getMessage();
+//       exception.printStackTrace();
+    }
+
 }

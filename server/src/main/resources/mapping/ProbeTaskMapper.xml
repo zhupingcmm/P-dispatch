@@ -16,17 +16,17 @@
     <insert id="addProbeTaskInfo" parameterType="list">
         insert into `server`.tb_probe_task_queue
         (
-        probe_info_id,
-        probe_id,
-        job_name,
-        status
+            probe_info_id,
+            probe_id,
+            job_name,
+            status
         )
         <foreach collection="list" item="item" index="index">
             values
             (
                 #{item.probeInfoId},
-                #{item.probe_id},
-                #{item.job_name},
+                #{item.probeId},
+                #{item.jobName},
                 #{item.status}
             )
         </foreach>
