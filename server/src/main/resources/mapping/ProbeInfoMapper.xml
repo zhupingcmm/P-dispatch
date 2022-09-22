@@ -6,6 +6,8 @@
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="probe_id" property="probeId" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <select id="selectProbeInfoByProbeId" resultMap="ProbeInfoMap">
         select * from `server`.tb_probe_info
@@ -33,4 +35,14 @@
              #{status}
             )
     </insert>
+    <select id="getProbeList" resultMap="ProbeInfoMap">
+        select * from `server`.tb_probe_info;
+    </select>
+    <update id="updateStatus" parameterType="list">
+        <foreach collection="list" item="item" index="index">
+            update `server`.tb_probe_info
+            set status = 1
+            where id = #{item.id}
+        </foreach>
+    </update>
 </mapper>

@@ -17,6 +17,10 @@ public class ReceiveProbeInfo <T extends ProbeInfo>{
 
     private final ProbeInfoService probeInfoService;
 
+    /**
+     * 监听 kafka 中 probe info的 topic 信息
+     * @param record
+     */
     @KafkaListener(topics = Constants.PROBE_INFO_TOPIC)
     public void onHeartbeat(ConsumerRecord<String,T> record) {
         ProbeInfo probeInfo = JSON.parseObject(String.valueOf(record.value()), ProbeInfo.class);

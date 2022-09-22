@@ -33,6 +33,7 @@ public class HeartbeatJob  extends QuartzJobBean {
                 .status(0)
                 .build();
         log.info("Start heartbeat to server with info: {}", probeInfo.toString());
+        // 向server发出心跳，并且带上probe的信息
         syncToServer.syncToServer(probeInfo);
     }
 }

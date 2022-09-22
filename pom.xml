@@ -23,6 +23,7 @@
         <hutool.version>4.6.4</hutool.version>
         <mybatis.plus.extension.version>3.4.0</mybatis.plus.extension.version>
         <jna.version>5.5.0</jna.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
     </properties>
 
     <parent>
@@ -33,6 +34,12 @@
     </parent>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+                <optional>true</optional>
+            </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-extension</artifactId>
