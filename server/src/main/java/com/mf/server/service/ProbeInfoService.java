@@ -14,4 +14,6 @@ public interface ProbeInfoService {
      * 检查 probe的状态
      */
     void checkProbeStatus();
+
+
 }

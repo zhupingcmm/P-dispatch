@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mf.server.mapper.ProbeInfoMemoryMapper">
+    <resultMap id="ProbeMemoryMap" type="com.mf.server.model.MemoryDo">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="probe_info_id" property="probeInfoId" jdbcType="INTEGER"/>
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="used" property="used" jdbcType="INTEGER"/>
+        <result column="free" property="free" jdbcType="INTEGER"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <insert id="addProbeMemoryInfo" parameterType="com.mf.server.model.MemoryDo">
+        insert into `server`.tb_probe_memory
+            (
+                probe_info_id,
+                total,
+                used,
+                free
+            )
+        values
+            (
+             #{probeInfoId},
+             #{total},
+             #{used},
+             #{free}
+            );
+    </insert>
+    <update id="updateProbeMemoryInfo">
+        update `server`.tb_probe_memory
+        set total=#{total}, used=#{used}, free=#{free}
+        where probe_info_id=#{probeInfoId}
+    </update>
+    <select id="getProbeMemoryInfo" resultMap="ProbeMemoryMap">
+        select * from `server`.tb_probe_memory
+        where probe_info_id=#{id}
+    </select>
+</mapper>
