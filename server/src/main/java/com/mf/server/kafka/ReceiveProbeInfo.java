@@ -36,7 +36,7 @@ public class ReceiveProbeInfo <T extends ProbeInfo>{
             probeInfoService.updateProbeInfo(probeInfo);
             log.debug("topic: {} partition {}, value: {}, offset {}", record.topic(), record.partition(), record.value(), record.offset());
         } finally {
-            consumer.commitAsync(Collections.singletonMap(new TopicPartition(record.topic(), record.partition()), new OffsetAndMetadata(record.offset()))
+            consumer.commitAsync(Collections.singletonMap(new TopicPartition(record.topic(), record.partition()), new OffsetAndMetadata(record.offset() + 1))
                     , (Map<TopicPartition, OffsetAndMetadata> offsets, Exception exception) -> {
                 if (exception != null) {
                     log.error(exception.getMessage());

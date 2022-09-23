@@ -1,13 +1,23 @@
 package com.mf.server.model;
 
-import lombok.Builder;
+import com.mf.dispatch.common.base.BaseBean;
+import com.mf.dispatch.common.base.ProbeInfo;
+import com.mf.dispatch.common.base.Task;
+import com.mf.dispatch.common.base.os.Cpu;
+import com.mf.dispatch.common.base.os.Jvm;
+import com.mf.dispatch.common.base.os.Memory;
+import com.mf.dispatch.common.base.os.OsInfo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 @Data
-@Builder
-public class ProbeInfoDo {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProbeInfoDo extends BaseBean {
 
     private long id;
 
@@ -21,14 +31,17 @@ public class ProbeInfoDo {
      */
     private long probeId;
 
-
-
     /**
-     *  the probe extra info
+     * the probe system info
      */
 
-//    private String extra;
+    private CpuDo cpu;
 
+    private JvmDo jvm;
+
+    private MemoryDo memory;
+
+    private OsInfoDo osInfo;
 
     /**
      * the probe status 0 active 1 disconnect
@@ -36,6 +49,11 @@ public class ProbeInfoDo {
 
     private int status;
 
+
+    /**
+     * probe task queue
+     */
+    private LinkedList<ProbeTaskDo> taskQueue = new LinkedList<>();
 
     private Date createTime;
 

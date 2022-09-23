@@ -2,12 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mf.server.mapper.ProbeInfoMapper">
     <resultMap id="ProbeInfoMap" type="com.mf.server.model.ProbeInfoDo">
-        <result column="id" property="id" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="probe_id" property="probeId" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <association property="cpu"
+                     javaType="com.mf.server.model.CpuDo"
+                     column="id"
+                     select="com.mf.server.mapper.ProbeInfoCpuMapper.getProbeCpuByProbeInfoId"
+        />
+        <association property="jvm"
+                     javaType="com.mf.server.model.JvmDo"
+                     column="id"
+                     select="com.mf.server.mapper.ProbeInfoJvmMapper.getProbeJvmInfoByProbeInfoId"
+        />
+        <association property="memory"
+                     javaType="com.mf.server.model.MemoryDo"
+                     column="id"
+                     select="com.mf.server.mapper.ProbeInfoMemoryMapper.getProbeMemoryInfo"
+        />
+        <association property="osInfo"
+                     javaType="com.mf.server.model.OsInfoDo"
+                     column="id"
+                     select="com.mf.server.mapper.ProbeInfoOsMapper.getProbeOsInfoByProbeInfoId"
+        />
+        <collection property="taskQueue"
+                    ofType="com.mf.server.model.ProbeTaskDo"
+                    column="id"
+                    select="com.mf.server.mapper.ProbeTaskMapper.getProbeTasksByProbeId"
+        />
     </resultMap>
     <select id="selectProbeInfoByProbeId" resultMap="ProbeInfoMap">
         select * from `server`.tb_probe_info

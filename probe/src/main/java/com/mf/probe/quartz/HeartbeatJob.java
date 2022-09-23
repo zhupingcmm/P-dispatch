@@ -36,8 +36,12 @@ public class HeartbeatJob  extends QuartzJobBean {
                 .build();
         LinkedList<Task> tasks = new LinkedList<>();
         tasks.add(task);
+        SystemHardwareInfo systemHardwareInfo = new SystemHardwareInfo();
         ProbeInfo probeInfo = ProbeInfo.builder()
-                .systemInfo(new SystemHardwareInfo())
+                .cpu(systemHardwareInfo.getCpu())
+                .jvm(systemHardwareInfo.getJvm())
+                .osInfo(systemHardwareInfo.getOsInfo())
+                .memory(systemHardwareInfo.getMemory())
                 .customerId(customerId)
                 .probeId(probeId)
                 .status(0)

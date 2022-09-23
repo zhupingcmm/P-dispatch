@@ -41,29 +41,29 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
        if (probeInfoDo == null) {
            // 插入
            // 1. 插入 数据到 tb_probe_info
-           probeInfoMapper.insertProbeInfo(ProbeInfoDo.builder()
-                   .customerId(probeInfo.getCustomerId())
-                   .probeId(probeInfo.getProbeId())
-                   .build());
+           probeInfoDo = new ProbeInfoDo();
+           probeInfoDo.setCustomerId(probeInfo.getCustomerId());
+           probeInfoDo.setProbeId(probeInfo.getProbeId());
+           probeInfoMapper.insertProbeInfo(probeInfoDo);
            probeInfoDo = probeInfoMapper.selectProbeInfoByProbeId(probeInfo.getProbeId());
 
            // 2. 插入 数据到 tb_probe_cpu
-           CpuDo cpuDo = ObjectTransform.transform(probeInfo.getSystemInfo().getCpu(), CpuDo.class);
+           CpuDo cpuDo = ObjectTransform.transform(probeInfo.getCpu(), CpuDo.class);
            cpuDo.setProbeInfoId(probeInfoDo.getId());
            cpuMapper.addProbeCpuInfo(cpuDo);
 
            // 3.插入 数据到 tb_probe_memory
-           MemoryDo memoryDo = ObjectTransform.transform(probeInfo.getSystemInfo().getMemory(), MemoryDo.class);
+           MemoryDo memoryDo = ObjectTransform.transform(probeInfo.getMemory(), MemoryDo.class);
            memoryDo.setProbeInfoId(probeInfoDo.getId());
            memoryMapper.addProbeMemoryInfo(memoryDo);
 
            // 4. 插入 数据到 tb_probe_os
-           OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getSystemInfo().getOsInfo(), OsInfoDo.class);
+           OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getOsInfo(), OsInfoDo.class);
            osInfoDo.setProbeInfoId(probeInfoDo.getId());
            osMapper.addProbeOsInfo(osInfoDo);
 
            // 5. 插入 数据到 tb_probe_jvm
-           JvmDo jvmDo = ObjectTransform.transform(probeInfo.getSystemInfo().getJvm(), JvmDo.class);
+           JvmDo jvmDo = ObjectTransform.transform(probeInfo.getJvm(), JvmDo.class);
            jvmDo.setProbeInfoId(probeInfoDo.getId());
            jvmMapper.addProbeJvmInfo(jvmDo);
 
@@ -88,22 +88,22 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
            probeInfoMapper.updateProbeInfo(probeInfoDo);
 
            //2. 更新 tb_probe_cpu 数据
-           CpuDo cpuDo = ObjectTransform.transform(probeInfo.getSystemInfo().getCpu(), CpuDo.class);
+           CpuDo cpuDo = ObjectTransform.transform(probeInfo.getCpu(), CpuDo.class);
            cpuDo.setProbeInfoId(probeInfoDo.getId());
            cpuMapper.updateProbeCpuInfo(cpuDo);
 
            //3. 更新数据到 tb_probe_memory
-           MemoryDo memoryDo = ObjectTransform.transform(probeInfo.getSystemInfo().getMemory(), MemoryDo.class);
+           MemoryDo memoryDo = ObjectTransform.transform(probeInfo.getMemory(), MemoryDo.class);
            memoryDo.setProbeInfoId(probeInfoDo.getId());
            memoryMapper.updateProbeMemoryInfo(memoryDo);
 
            //4. 更新数据到 tb_probe_os
-           OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getSystemInfo().getOsInfo(), OsInfoDo.class);
+           OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getOsInfo(), OsInfoDo.class);
            osInfoDo.setProbeInfoId(probeInfoDo.getId());
            osMapper.updateProbeOsInfo(osInfoDo);
 
            // 5. 更新数据到 tb_probe_jvm
-           JvmDo jvmDo = ObjectTransform.transform(probeInfo.getSystemInfo().getJvm(), JvmDo.class);
+           JvmDo jvmDo = ObjectTransform.transform(probeInfo.getJvm(), JvmDo.class);
            jvmDo.setProbeInfoId(probeInfoDo.getId());
            jvmMapper.updateProbeJvmInfo(jvmDo);
 

@@ -1,7 +1,7 @@
 package com.mf.dispatch.common.base;
 
 
-import com.mf.dispatch.common.base.os.SystemHardwareInfo;
+import com.mf.dispatch.common.base.os.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +33,13 @@ public class ProbeInfo extends BaseBean {
      * the probe system info
      */
 
-    private SystemHardwareInfo systemInfo;
+    private Cpu cpu;
+
+    private Jvm jvm;
+
+    private Memory memory;
+
+    private OsInfo osInfo;
 
     /**
      * the probe status 0 active 1 disconnect
@@ -47,8 +53,4 @@ public class ProbeInfo extends BaseBean {
      */
     private LinkedList<Task> taskQueue = new LinkedList<>();
 
-//    /**
-//     * the extra info from probe
-//     */
-//    private Map<String, Object> extra = new ConcurrentHashMap<>();
 }
