@@ -7,11 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 @Builder
@@ -33,12 +29,25 @@ public class ProbeInfo extends BaseBean {
      * the probe system info
      */
 
+    /**
+     * cpu info
+     */
     private Cpu cpu;
 
+    /**
+     * jvm info
+     */
     private Jvm jvm;
+
+    /**
+     * memory info
+     */
 
     private Memory memory;
 
+    /**
+     * os os info
+     */
     private OsInfo osInfo;
 
     /**

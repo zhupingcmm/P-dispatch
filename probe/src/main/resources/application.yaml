@@ -12,6 +12,8 @@ spring:
       missing-topics-fatal: false
     consumer:
       isolation-level: read_committed
+      group-id: probe-consumer-group
+      fetch-max-wait: 400
   quartz:
     job-store-type: memory
 

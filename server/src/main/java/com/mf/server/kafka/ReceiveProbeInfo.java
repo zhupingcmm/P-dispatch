@@ -15,7 +15,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -43,9 +42,7 @@ public class ReceiveProbeInfo <T extends ProbeInfo>{
                     throw new DispatchException(exception);
                 }
 
-                log.info(offsets.toString());
-
-
+                log.debug("Server commit the offset: {}", offsets.toString());
             });
         }
     }

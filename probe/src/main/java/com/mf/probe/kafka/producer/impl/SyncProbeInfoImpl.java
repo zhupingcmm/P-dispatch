@@ -1,11 +1,11 @@
-package com.mf.probe.sync.impl;
+package com.mf.probe.kafka.producer.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.mf.dispatch.common.base.ProbeInfo;
 import com.mf.dispatch.common.base.ResponseEnum;
 import com.mf.dispatch.common.constants.Constants;
 import com.mf.dispatch.common.exception.DispatchException;
-import com.mf.probe.sync.SyncToServer;
+import com.mf.probe.kafka.producer.SyncProbeInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,16 +20,15 @@ import java.util.concurrent.TimeoutException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SyncToServerImpl<T extends ProbeInfo> implements SyncToServer<T> {
-
+public class SyncProbeInfoImpl <T extends ProbeInfo> implements SyncProbeInfo<T> {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
-    public void syncToServer(T probeInfo) {
-        ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(Constants.PROBE_INFO_TOPIC, JSON.toJSONString(probeInfo));
+    public void syncToServer(T t) {
+        ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(Constants.PROBE_INFO_TOPIC, JSON.toJSONString(t));
         try {
-           SendResult<String, String> result = future.get(2, TimeUnit.SECONDS);
-           log.debug("Success send probe info to server: {}", result.toString());
+            SendResult<String, String> result = future.get(2, TimeUnit.SECONDS);
+            log.debug("Success send probe info to server: {}", result.toString());
         } catch (InterruptedException | RuntimeException | ExecutionException | TimeoutException e) {
             log.error("Send probe info and get a error {}", e.getMessage());
             throw new DispatchException(ResponseEnum.SEND_DATA_ERROR);

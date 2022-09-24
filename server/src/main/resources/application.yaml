@@ -17,7 +17,7 @@ spring:
       missing-topics-fatal: false
     consumer:
       isolation-level: read_committed
-      group-id: test-consumer-group
+      group-id: server-consumer-group
       fetch-max-wait: 400
 #      enable-auto-commit: true
 

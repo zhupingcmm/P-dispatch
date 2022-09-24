@@ -11,7 +11,8 @@ public enum ResponseEnum {
     TOO_MANY_ROWS_AFFECTED(3, "have affect other data"),
     NOT_TOTAL_ROWS_AFFECTED(4, "data is missing"),
 
-    FAILED_TO_TRANSFORM(5, "failed to transform");
+    FAILED_TO_TRANSFORM(5, "failed to transform"),
+    SUCCESS(6, "request success");
 
     @Getter
     private int code;

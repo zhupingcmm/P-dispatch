@@ -1,8 +1,9 @@
 package com.mf.server.dispatch;
 
 import com.mf.dispatch.common.base.ProbeInfo;
+import com.mf.dispatch.common.base.Task;
 
-public interface Dispatch <T extends ProbeInfo>{
+public interface Dispatch <T extends Task>{
 
-    long dispatch();
+    void dispatch(T task);
 }
