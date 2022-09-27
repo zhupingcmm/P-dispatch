@@ -6,7 +6,7 @@ public interface TaskService<T extends Task> {
 
     void runTask(T t);
 
-    int addTask();
+    void addTask(T t);
 
     int updateTaskStatus();
 

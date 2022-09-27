@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mf.probe.mapper.TaskMapper">
+    <resultMap id="TaskMap" type="com.mf.probe.model.TaskDo">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="probe_id" property="probeId" jdbcType="VARCHAR"/>
+        <result column="jobName" property="jobName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <insert id="addTask" parameterType="taskDo">
+        insert into `probe`.tb_task_queue
+            (
+                probe_id,
+                job_name
+            )
+        values
+            (
+                #{probeId},
+                #{jobName}
+            )
+    </insert>
+    <update id="updateTaskStatus" parameterType="taskDo">
+        update `probe`.tb_task_queue
+        set status = #{status}
+        where id = #{id}
+    </update>
+</mapper>

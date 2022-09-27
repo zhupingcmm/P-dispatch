@@ -1,6 +1,11 @@
 spring:
   application:
     name: probe
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/probe?useInformationSchema=false&charset=utf8mb4&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -13,14 +18,18 @@ spring:
     consumer:
       isolation-level: read_committed
       group-id: probe-consumer-group
-      fetch-max-wait: 400
+      fetch-max-wait: 4000
   quartz:
     job-store-type: memory
+
 
 server:
   port: 8081
   servlet:
     context-path: /probe
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.mf.probe.model
 logging:
   level:
     root: info

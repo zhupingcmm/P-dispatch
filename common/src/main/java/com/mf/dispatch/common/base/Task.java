@@ -24,7 +24,7 @@ public class Task extends BaseBean {
 
 
     /**
-     * task status  0 active 1 running 3 success 4 failed 5 pending
+     * task status 0-pending 1-running 2-success 3-failed
      */
     private int status;
 

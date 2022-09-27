@@ -18,7 +18,7 @@ spring:
     consumer:
       isolation-level: read_committed
       group-id: server-consumer-group
-      fetch-max-wait: 400
+      fetch-max-wait: 4000
 #      enable-auto-commit: true
 
 server:

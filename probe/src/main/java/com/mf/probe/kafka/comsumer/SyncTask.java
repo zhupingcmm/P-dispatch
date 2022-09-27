@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.mf.dispatch.common.base.Task;
 import com.mf.dispatch.common.constants.Constants;
 import com.mf.dispatch.common.exception.DispatchException;
+import com.mf.probe.model.TaskDo;
+import com.mf.probe.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -22,9 +24,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SyncTask <T extends Task>{
 
-
-    @Value("probe.id")
+    @Value("${probe.id}")
     private long probeId;
+
+    private final TaskService<Task> taskService;
 
     @KafkaListener(topics = Constants.PROBE_TASK_TOPIC)
     public void onTask(ConsumerRecord<String,T> record, Consumer consumer) {
@@ -38,8 +41,9 @@ public class SyncTask <T extends Task>{
                 return;
             }
 
+            taskService.addTask(task);
 
-
+            taskService.runTask(task);
 
         } finally {
             consumer.commitAsync(Collections.singletonMap(new TopicPartition(record.topic(), record.partition()), new OffsetAndMetadata(record.offset() + 1)), (Map<TopicPartition, OffsetAndMetadata> offsets, Exception exception) -> {
