@@ -5,7 +5,7 @@
         <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="probe_info_id" property="probeInfoId" jdbcType="INTEGER"/>
         <result column="probe_id" property="probeId" jdbcType="VARCHAR"/>
-        <result column="jobName" property="jobName" jdbcType="VARCHAR"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -18,26 +18,26 @@
         (
             probe_info_id,
             probe_id,
-            job_name,
+            task_name,
             status
         )
-        <foreach collection="list" item="item" index="index">
-            values
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+
             (
                 #{item.probeInfoId},
                 #{item.probeId},
-                #{item.jobName},
+                #{item.taskName},
                 #{item.status}
             )
         </foreach>
     </insert>
     <update id="updateTaskInfo" parameterType="list">
-        update `server`.tb_probe_task_queue
-        <foreach collection="list" item="item" index="index">
-            set probe_info_id=#{item.probeInfoId}, probe_id=#{item.probeId}, job_name=#{item.jobName}, status=#{item.status}
+        <foreach collection="list" item="item" index="index" separator=";">
+            update `server`.tb_probe_task_queue
+            set probe_info_id=#{item.probeInfoId}, probe_id=#{item.probeId}, task_name=#{item.taskName}, status=#{item.status}
             where probe_info_id = #{item.probeInfoId}
         </foreach>
-
     </update>
 
 </mapper>

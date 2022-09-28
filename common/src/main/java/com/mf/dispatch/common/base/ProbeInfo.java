@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 @Data
 @Builder
@@ -60,6 +62,6 @@ public class ProbeInfo extends BaseBean {
     /**
      * probe task queue
      */
-    private LinkedList<Task> taskQueue = new LinkedList<>();
+    private List<Task> taskQueue = new ArrayList<>();
 
 }

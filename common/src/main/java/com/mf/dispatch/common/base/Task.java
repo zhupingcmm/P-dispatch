@@ -18,9 +18,9 @@ public class Task extends BaseBean {
 
 
     /**
-     * task info (run job)
+     * task info (run task)
      */
-    private String jobName;
+    private String taskName;
 
 
     /**

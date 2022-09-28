@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.mf.dispatch.common.base.Task;
 import com.mf.dispatch.common.constants.Constants;
 import com.mf.dispatch.common.exception.DispatchException;
-import com.mf.probe.model.TaskDo;
 import com.mf.probe.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

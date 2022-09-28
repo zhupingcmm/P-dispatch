@@ -4,7 +4,7 @@
     <resultMap id="TaskMap" type="com.mf.probe.model.TaskDo">
         <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="probe_id" property="probeId" jdbcType="VARCHAR"/>
-        <result column="jobName" property="jobName" jdbcType="VARCHAR"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -13,17 +13,20 @@
         insert into `probe`.tb_task_queue
             (
                 probe_id,
-                job_name
+                task_name
             )
         values
             (
                 #{probeId},
-                #{jobName}
+                #{taskName}
             )
     </insert>
     <update id="updateTaskStatus" parameterType="taskDo">
         update `probe`.tb_task_queue
         set status = #{status}
-        where id = #{id}
+        where task_name = #{taskName}
     </update>
+    <select id="getTasks" resultMap="TaskMap">
+        select probe_id, task_name, status from `probe`.tb_task_queue;
+    </select>
 </mapper>

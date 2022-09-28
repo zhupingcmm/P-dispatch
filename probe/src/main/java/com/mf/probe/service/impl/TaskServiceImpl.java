@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -27,12 +28,15 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
     public void runTask(T t) {
         try {
             Future<Integer> result = poolExecutor.submit(() -> {
-                log.info(t.toString());
+                // 模拟执行任务，并且返回执行结果
                 Thread.sleep(1000);
                 return 1;
             });
-            log.info("result: {}", result.get());
-//            taskMapper.updateTaskStatus();
+            log.info("Run {} with result: {}", t.getTaskName(), result.get());
+            TaskDo taskDo = new TaskDo();
+            taskDo.setTaskName(t.getTaskName());
+            taskDo.setStatus(result.get());
+            taskMapper.updateTaskStatus(taskDo);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -51,5 +55,12 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
     @Transactional
     public int updateTaskStatus() {
         return 0;
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        List<Task> tasks = ObjectTransform.transform(taskMapper.getTasks(), Task.class);
+
+        return tasks;
     }
 }

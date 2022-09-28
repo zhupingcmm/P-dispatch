@@ -76,7 +76,7 @@ CREATE TABLE server.tb_probe_task_queue (
     id INT PRIMARY KEY AUTO_INCREMENT,
     probe_info_id INT,
     probe_id INT,
-    job_name TEXT,
+    task_name TEXT,
     status INT DEFAULT 0,
     create_time datetime default current_timestamp comment 'create time',
     update_time datetime default current_timestamp on update current_timestamp comment 'update time',
