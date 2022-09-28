@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-svc:3306/server?useInformationSchema=false&charset=utf8mb4&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+  kafka:
+    bootstrap-servers: mysql-svc:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 1
+    listener:
+      ack-mode: manual_immediate
+      missing-topics-fatal: false
+    consumer:
+      isolation-level: read_committed
+      group-id: server-consumer-group
+      fetch-max-wait: 4000
+logging:
+  level:
+    root: info
+  file:
+    name: logs/server.log

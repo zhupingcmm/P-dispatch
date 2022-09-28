@@ -6,5 +6,4 @@ public class Constants {
 
     public static final String PROBE_TASK_TOPIC = "probe.task";
 
-    public static final int HEARTBEAT_TIME = 5;
 }

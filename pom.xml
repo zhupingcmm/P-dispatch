@@ -26,6 +26,7 @@
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons.beanutils.verion>1.9.4</commons.beanutils.verion>
         <mybatis.version>2.2.2</mybatis.version>
+        <alibaba.cloud.version>2.2.5.RELEASE</alibaba.cloud.version>
     </properties>
 
     <parent>
@@ -36,6 +37,11 @@
     </parent>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${alibaba.cloud.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>

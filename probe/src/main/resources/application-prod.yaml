@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-svc:3306/probe?useInformationSchema=false&charset=utf8mb4&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+  kafka:
+    bootstrap-servers: kafka-svc:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 0
+    listener:
+      ack-mode: manual_immediate
+      missing-topics-fatal: false
+    consumer:
+      isolation-level: read_committed
+      group-id: probe-consumer-group
+      fetch-max-wait: 4000
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848

@@ -1,3 +1,7 @@
+CREATE database probe;
+
+DROP TABLE tb_task_queue;
+
 CREATE TABLE probe.tb_task_queue (
     id INT PRIMARY KEY AUTO_INCREMENT,
     probe_id INT,

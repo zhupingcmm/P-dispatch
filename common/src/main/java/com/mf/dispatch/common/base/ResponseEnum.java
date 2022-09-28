@@ -12,7 +12,8 @@ public enum ResponseEnum {
     NOT_TOTAL_ROWS_AFFECTED(4, "data is missing"),
 
     FAILED_TO_TRANSFORM(5, "failed to transform"),
-    SUCCESS(6, "request success");
+    SUCCESS(6, "request success"),
+    RUN_TASK_FAILED(7, "run task failed");
 
     @Getter
     private int code;

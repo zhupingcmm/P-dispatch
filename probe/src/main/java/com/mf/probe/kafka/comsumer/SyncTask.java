@@ -40,8 +40,10 @@ public class SyncTask <T extends Task>{
                 return;
             }
 
+            // 把 task 的信息存到db（tb_task_queue）
             taskService.addTask(task);
 
+            // 执行 task
             taskService.runTask(task);
 
         } finally {

@@ -1,6 +1,8 @@
 package com.mf.probe.service.impl;
 
+import com.mf.dispatch.common.base.ResponseEnum;
 import com.mf.dispatch.common.base.Task;
+import com.mf.dispatch.common.exception.DispatchException;
 import com.mf.dispatch.common.utils.Asset;
 import com.mf.dispatch.common.utils.ObjectTransform;
 import com.mf.probe.mapper.TaskMapper;
@@ -26,19 +28,25 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
     private final ThreadPoolExecutor poolExecutor;
     @Override
     public void runTask(T t) {
+        TaskDo taskDo = new TaskDo();
+        taskDo.setTaskName(t.getTaskName());
         try {
             Future<Integer> result = poolExecutor.submit(() -> {
-                // 模拟执行任务，并且返回执行结果
+                // 模拟执行task任务，并且返回执行结果
                 Thread.sleep(1000);
                 return 1;
             });
             log.info("Run {} with result: {}", t.getTaskName(), result.get());
-            TaskDo taskDo = new TaskDo();
-            taskDo.setTaskName(t.getTaskName());
+
             taskDo.setStatus(result.get());
+            // 更新 db 中 tb_task_queue task的状态
             taskMapper.updateTaskStatus(taskDo);
+
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            taskDo.setStatus(3);
+            // 更新 db 中 tb_task_queue task的状态
+            taskMapper.updateTaskStatus(taskDo);
+            throw new DispatchException(ResponseEnum.RUN_TASK_FAILED);
         }
     }
 
@@ -59,8 +67,6 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
 
     @Override
     public List<Task> getTasks() {
-        List<Task> tasks = ObjectTransform.transform(taskMapper.getTasks(), Task.class);
-
-        return tasks;
+        return ObjectTransform.transform(taskMapper.getTasks(), Task.class);
     }
 }
