@@ -11,8 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -31,17 +33,6 @@ public class ProbeInfoDo extends BaseBean {
      */
     private long probeId;
 
-    /**
-     * the probe system info
-     */
-
-    private CpuDo cpu;
-
-    private JvmDo jvm;
-
-    private MemoryDo memory;
-
-    private OsInfoDo osInfo;
 
     /**
      * the probe status 0 active 1 disconnect
@@ -53,7 +44,10 @@ public class ProbeInfoDo extends BaseBean {
     /**
      * probe task queue
      */
-    private LinkedList<ProbeTaskDo> taskQueue = new LinkedList<>();
+    private List<ProbeTaskDo> taskQueue = new ArrayList<>();
+
+
+    private List<MetricDo> metrics = new ArrayList<>();
 
     private Date createTime;
 

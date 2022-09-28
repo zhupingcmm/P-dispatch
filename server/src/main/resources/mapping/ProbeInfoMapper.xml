@@ -8,26 +8,12 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <association property="cpu"
-                     javaType="com.mf.server.model.CpuDo"
-                     column="id"
-                     select="com.mf.server.mapper.ProbeInfoCpuMapper.getProbeCpuByProbeInfoId"
+        <collection property="metrics"
+                    ofType="com.mf.server.model.MetricDo"
+                    column="id"
+                    select="com.mf.server.mapper.MetricMapper.getMetricsByProbeId"
         />
-        <association property="jvm"
-                     javaType="com.mf.server.model.JvmDo"
-                     column="id"
-                     select="com.mf.server.mapper.ProbeInfoJvmMapper.getProbeJvmInfoByProbeInfoId"
-        />
-        <association property="memory"
-                     javaType="com.mf.server.model.MemoryDo"
-                     column="id"
-                     select="com.mf.server.mapper.ProbeInfoMemoryMapper.getProbeMemoryInfo"
-        />
-        <association property="osInfo"
-                     javaType="com.mf.server.model.OsInfoDo"
-                     column="id"
-                     select="com.mf.server.mapper.ProbeInfoOsMapper.getProbeOsInfoByProbeInfoId"
-        />
+
         <collection property="taskQueue"
                     ofType="com.mf.server.model.ProbeTaskDo"
                     column="id"

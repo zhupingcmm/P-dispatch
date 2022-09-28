@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mf.server.mapper.MetricMapper">
+    <resultMap id="MetricMap" type="com.mf.server.model.MetricDo">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="probe_info_id" property="probeInfoId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="use_ratio" property="usage" jdbcType="INTEGER"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <insert id="addMetrics" parameterType="list">
+        insert into `server`.tb_dispatch_metric
+        (
+            probe_info_id,
+            name,
+            use_ratio
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.probeInfoId},
+                #{item.name},
+                #{item.usage}
+            )
+        </foreach>
+    </insert>
+    <select id="getMetricsByProbeId" resultMap="MetricMap">
+        select * from `server`.tb_dispatch_metric where probe_info_id=#{probeInfoId}
+    </select>
+    <update id="updateMetrics" parameterType="list">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update `server`.tb_dispatch_metric
+            set use_ratio=#{item.usage}
+            where probe_info_id=#{item.probeInfoId} AND name=#{item.name}
+        </foreach>
+    </update>
+</mapper>

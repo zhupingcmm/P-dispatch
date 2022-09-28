@@ -1,4 +1,4 @@
-package com.mf.server.kafka;
+package com.mf.server.kafka.comsumer;
 
 import com.alibaba.fastjson.JSON;
 import com.mf.dispatch.common.base.ProbeInfo;
@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.Map;
 
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ReceiveProbeInfo <T extends ProbeInfo>{
-
+public class ProbeInfoMessage  <T extends ProbeInfo>{
     private final ProbeInfoService probeInfoService;
 
     /**
@@ -37,13 +37,13 @@ public class ReceiveProbeInfo <T extends ProbeInfo>{
         } finally {
             consumer.commitAsync(Collections.singletonMap(new TopicPartition(record.topic(), record.partition()), new OffsetAndMetadata(record.offset() + 1))
                     , (Map<TopicPartition, OffsetAndMetadata> offsets, Exception exception) -> {
-                if (exception != null) {
-                    log.error(exception.getMessage());
-                    throw new DispatchException(exception);
-                }
+                        if (exception != null) {
+                            log.error(exception.getMessage());
+                            throw new DispatchException(exception);
+                        }
 
-                log.debug("Server commit the offset: {}", offsets.toString());
-            });
+                        log.debug("Server commit the offset: {}", offsets.toString());
+                    });
         }
     }
 }

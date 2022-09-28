@@ -2,6 +2,7 @@ package com.mf.server.service.impl;
 
 import com.mf.dispatch.common.base.ProbeInfo;
 import com.mf.dispatch.common.utils.ObjectTransform;
+import com.mf.server.common.Metric;
 import com.mf.server.mapper.*;
 import com.mf.server.model.*;
 import com.mf.server.service.ProbeInfoService;
@@ -10,8 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -21,13 +25,7 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
 
     private final ProbeInfoMapper probeInfoMapper;
 
-    private final ProbeInfoCpuMapper cpuMapper;
-
-    private final ProbeInfoMemoryMapper memoryMapper;
-
-    private final ProbeInfoOsMapper osMapper;
-
-    private final ProbeInfoJvmMapper jvmMapper;
+    private final MetricMapper metricMapper;
 
     private final ProbeTaskMapper taskMapper;
 
@@ -39,6 +37,7 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
 
        // 如果没有获取到 probe 的信息那就进行插入操作， 如果获取到了 就进行更新操作
        if (probeInfoDo == null) {
+
            // 插入
            // 1. 插入 数据到 tb_probe_info
            probeInfoDo = new ProbeInfoDo();
@@ -47,25 +46,36 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
            probeInfoMapper.insertProbeInfo(probeInfoDo);
            probeInfoDo = probeInfoMapper.selectProbeInfoByProbeId(probeInfo.getProbeId());
 
-           // 2. 插入 数据到 tb_probe_cpu
-           CpuDo cpuDo = ObjectTransform.transform(probeInfo.getCpu(), CpuDo.class);
-           cpuDo.setProbeInfoId(probeInfoDo.getId());
-           cpuMapper.addProbeCpuInfo(cpuDo);
+           Metric jvmMetric = Metric.builder()
+                   .name("jvm")
+                   .usage(Double.parseDouble(String.format("%.2f", probeInfo.getJvm().getTotal() / probeInfo.getJvm().getMax())))
+                   .build();
 
-           // 3.插入 数据到 tb_probe_memory
-           MemoryDo memoryDo = ObjectTransform.transform(probeInfo.getMemory(), MemoryDo.class);
-           memoryDo.setProbeInfoId(probeInfoDo.getId());
-           memoryMapper.addProbeMemoryInfo(memoryDo);
+           Metric cpuMetric = Metric.builder()
+                   .name("cpu")
+                   .usage(Double.parseDouble(String.format("%.2f", probeInfo.getCpu().getUsed() / probeInfo.getCpu().getTotal())))
+                   .build();
 
-           // 4. 插入 数据到 tb_probe_os
-           OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getOsInfo(), OsInfoDo.class);
-           osInfoDo.setProbeInfoId(probeInfoDo.getId());
-           osMapper.addProbeOsInfo(osInfoDo);
+           Metric memory = Metric.builder()
+                   .name("memory")
+                   .usage(Double.parseDouble(String.format("%.2f", probeInfo.getMemory().getUsed()/ probeInfo.getMemory().getTotal())))
+                   .build();
 
-           // 5. 插入 数据到 tb_probe_jvm
-           JvmDo jvmDo = ObjectTransform.transform(probeInfo.getJvm(), JvmDo.class);
-           jvmDo.setProbeInfoId(probeInfoDo.getId());
-           jvmMapper.addProbeJvmInfo(jvmDo);
+           List<MetricDo> metrics = new ArrayList<>();
+
+           MetricDo jvmMetricDo = ObjectTransform.transform(jvmMetric, MetricDo.class);
+           jvmMetricDo.setProbeInfoId(probeInfoDo.getId());
+           metrics.add(jvmMetricDo);
+
+           MetricDo cpuMetricDo = ObjectTransform.transform(cpuMetric, MetricDo.class);
+           cpuMetricDo.setProbeInfoId(probeInfoDo.getId());
+           metrics.add(cpuMetricDo);
+
+           MetricDo memoryMetricDo = ObjectTransform.transform(memory, MetricDo.class);
+           memoryMetricDo.setProbeInfoId(probeInfoDo.getId());
+           metrics.add(memoryMetricDo);
+
+           metricMapper.addMetrics(metrics);
 
            // 6. 插入到 tb_probe_task_queue
            List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
@@ -87,25 +97,18 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
            probeInfoDo.setUpdateTime(new Date(System.currentTimeMillis()));
            probeInfoMapper.updateProbeInfo(probeInfoDo);
 
-           //2. 更新 tb_probe_cpu 数据
-           CpuDo cpuDo = ObjectTransform.transform(probeInfo.getCpu(), CpuDo.class);
-           cpuDo.setProbeInfoId(probeInfoDo.getId());
-           cpuMapper.updateProbeCpuInfo(cpuDo);
 
-           //3. 更新数据到 tb_probe_memory
-           MemoryDo memoryDo = ObjectTransform.transform(probeInfo.getMemory(), MemoryDo.class);
-           memoryDo.setProbeInfoId(probeInfoDo.getId());
-           memoryMapper.updateProbeMemoryInfo(memoryDo);
-
-           //4. 更新数据到 tb_probe_os
-           OsInfoDo osInfoDo = ObjectTransform.transform(probeInfo.getOsInfo(), OsInfoDo.class);
-           osInfoDo.setProbeInfoId(probeInfoDo.getId());
-           osMapper.updateProbeOsInfo(osInfoDo);
-
-           // 5. 更新数据到 tb_probe_jvm
-           JvmDo jvmDo = ObjectTransform.transform(probeInfo.getJvm(), JvmDo.class);
-           jvmDo.setProbeInfoId(probeInfoDo.getId());
-           jvmMapper.updateProbeJvmInfo(jvmDo);
+           List<MetricDo> metricDos = probeInfoDo.getMetrics().stream().map(x -> {
+               if (Objects.equals(x.getName(), "jvm")){
+                   x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getJvm().getTotal() / probeInfo.getJvm().getMax())));
+               } else if (x.getName().equals("cpu")) {
+                   x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getCpu().getUsed() / probeInfo.getCpu().getTotal())));
+               } else if (x.getName().equals("memory")){
+                   x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getMemory().getUsed()/ probeInfo.getMemory().getTotal())));
+               }
+               return x;
+           }).collect(Collectors.toList());
+           metricMapper.updateMetrics(metricDos);
 
            //6. 更新数据到 tb_probe_task_queue
            List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
