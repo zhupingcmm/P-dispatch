@@ -16,10 +16,7 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
     @Override
     public void addTask(T task) {
         // 根据probe 的信息，计算出一台最优的probe机器
-
+        // 让后通过 mq 把 task 信息传递出去，带上probe 的id
         dispatchService.dispatch(task);
-
-        // 把计算出来的结果发送出去
-        taskMessage.sendTask(task);
     }
 }

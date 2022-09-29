@@ -13,7 +13,10 @@ public enum ResponseEnum {
 
     FAILED_TO_TRANSFORM(5, "failed to transform"),
     SUCCESS(6, "request success"),
-    RUN_TASK_FAILED(7, "run task failed");
+    RUN_TASK_FAILED(7, "run task failed"),
+    METRIC_IMPLEMENT_DO_NOT_EXIT(8, "metric implement do not exit"),
+
+    NO_AVAILABLE_PROBE(9, "no available probe");
 
     @Getter
     private int code;

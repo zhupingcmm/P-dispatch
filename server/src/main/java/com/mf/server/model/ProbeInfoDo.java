@@ -35,7 +35,7 @@ public class ProbeInfoDo extends BaseBean {
 
 
     /**
-     * the probe status 0 active 1 disconnect
+     * the probe status 0-active 1-disconnect
      */
 
     private int status;
