@@ -12,7 +12,7 @@
 
 ### 业务流
 
-`1. ` probe 会启动一个quartz job, 获取probe所在机器信息（cpu，memory,jvm,os 等信息）还有 当前probe 任务队列的信息，把这些信息同步到kafka中。
-`2. ` server 会去 监听kafka中 probe 同步过来的信息，让后把这些信息存到db。
-`3. ` 当客户端发送一个执行task的请求到server，server会根据存储 probe的信息来计算出一个最优的节点，然后把最优的节点信息和task信息一起同步kafka中。
-`4. ` probe 监听到了task的信息，然后判断这次的task是否是属于自己需要执行的，如果是就执行，如果不是执行忽略。
+*  probe 会启动一个quartz job, 获取probe所在机器信息（cpu，memory,jvm,os 等信息）还有 当前probe 任务队列的信息，把这些信息同步到kafka中。
+*  server 会去 监听kafka中 probe 同步过来的信息，让后把这些信息存到db。
+*  当客户端发送一个执行task的请求到server，server会根据存储 probe的信息来计算出一个最优的节点，然后把最优的节点信息和task信息一起同步kafka中。
+*  probe 监听到了task的信息，然后判断这次的task是否是属于自己需要执行的，如果是就执行，如果不是执行忽略。
