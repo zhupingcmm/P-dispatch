@@ -43,6 +43,7 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
             taskMapper.updateTaskStatus(taskDo);
 
         } catch (InterruptedException | ExecutionException e) {
+            // 把 task 状态设置成为失败
             taskDo.setStatus(3);
             // 更新 db 中 tb_task_queue task的状态
             taskMapper.updateTaskStatus(taskDo);
