@@ -25,9 +25,9 @@ public class TaskController {
 
     private Task mockTask(){
         return Task.builder()
-                .probeId(2l)
-                .taskName("run discovery job")
+                .probeId(2)
+                .customerId(2)
+                .taskName("run discovery task")
                 .build();
-
     }
 }

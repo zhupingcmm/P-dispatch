@@ -95,6 +95,7 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
            probeInfoDo.setProbeId(probeInfo.getProbeId());
            // update time 与 系统时间同步，这个是为了对tb_probe_info status 扫描做准备
            probeInfoDo.setUpdateTime(new Date(System.currentTimeMillis()));
+           probeInfoDo.setStatus(probeInfo.getStatus());
            probeInfoMapper.updateProbeInfo(probeInfoDo);
 
 

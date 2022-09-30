@@ -12,6 +12,8 @@ import java.util.List;
 public class ProbeItem extends BaseBean {
     private long probeId;
 
+    private long customerId;
+
     private long score;
 
     private List<Task> taskQueue;

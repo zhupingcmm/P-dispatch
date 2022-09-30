@@ -16,6 +16,11 @@ public class Task extends BaseBean {
      */
     private long probeId;
 
+    /**
+     * customer id
+     */
+    private long customerId;
+
 
     /**
      * task info (run task)

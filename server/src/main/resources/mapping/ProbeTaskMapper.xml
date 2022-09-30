@@ -5,6 +5,7 @@
         <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="probe_info_id" property="probeInfoId" jdbcType="INTEGER"/>
         <result column="probe_id" property="probeId" jdbcType="VARCHAR"/>
+        <result column="customer_id" property="customerId" jdbcType="VARCHAR"/>
         <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -18,6 +19,7 @@
         (
             probe_info_id,
             probe_id,
+            customer_id,
             task_name,
             status
         )
@@ -27,6 +29,7 @@
             (
                 #{item.probeInfoId},
                 #{item.probeId},
+                #{item.customerId},
                 #{item.taskName},
                 #{item.status}
             )
@@ -35,7 +38,7 @@
     <update id="updateTaskInfo" parameterType="list">
         <foreach collection="list" item="item" index="index" separator=";">
             update `server`.tb_probe_task_queue
-            set probe_info_id=#{item.probeInfoId}, probe_id=#{item.probeId}, task_name=#{item.taskName}, status=#{item.status}
+            set probe_info_id=#{item.probeInfoId}, probe_id=#{item.probeId}, customer_id=#{item.customerId}, task_name=#{item.taskName}, status=#{item.status}
             where probe_info_id = #{item.probeInfoId}
         </foreach>
     </update>

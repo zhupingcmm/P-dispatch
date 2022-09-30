@@ -26,6 +26,9 @@ public class SyncTask <T extends Task>{
     @Value("${probe.id}")
     private long probeId;
 
+    @Value("${probe.customer-id}")
+    private long customerId;
+
     private final TaskService<Task> taskService;
 
     @KafkaListener(topics = Constants.PROBE_TASK_TOPIC)
@@ -35,7 +38,7 @@ public class SyncTask <T extends Task>{
             Task task = JSON.parseObject(String.valueOf(record.value()), Task.class);
             log.info("Receive task from server,  topic: {} partition {}, value: {}, offset {}", record.topic(), record.partition(), record.value(), record.offset());
             // 判断task 是否属于该 probe 如果不属于就直接忽略，不做任何的操作
-            if (task.getProbeId() != probeId) {
+            if (task.getProbeId() != probeId || task.getCustomerId() != customerId) {
                 log.warn("this task is not belong to this probe");
                 return;
             }

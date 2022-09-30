@@ -43,7 +43,7 @@ public class DispatchImpl<T extends Task> implements Dispatch<T> {
     @Override
     public void dispatch(T task) {
 
-        List<ProbeItem> probes = wrap(probeInfoMapper.getProbeList());
+        List<ProbeItem> probes = wrap(probeInfoMapper.getProbeList(), task);
         for (ProbeItem probe : probes) {
 
             for (Metric metric : probe.getMetrics()) {
@@ -79,11 +79,13 @@ public class DispatchImpl<T extends Task> implements Dispatch<T> {
         taskMessage.sendTask(task);
     }
 
-    private List<ProbeItem> wrap(List<ProbeInfoDo> probeList){
+    private List<ProbeItem> wrap(List<ProbeInfoDo> probeList, Task task){
         List<ProbeItem> probes = new ArrayList<>();
         probeList.stream()
                 // 过滤出 active 的 probe
                 .filter(x -> x.getStatus() == 0)
+                // 过滤出 当前 customer 的 probe
+                .filter(x -> x.getCustomerId() == task.getCustomerId() )
                 .forEach(x -> {
                     ProbeItem probeItem = ProbeItem.builder()
                             .metrics(ObjectTransform.transform(x.getMetrics(), Metric.class))
@@ -92,7 +94,9 @@ public class DispatchImpl<T extends Task> implements Dispatch<T> {
                                     //过滤出pending 或者 active的job
                                     .filter(t -> t.getStatus() == 1 || t.getStatus() == 0)
                                     .collect(Collectors.toList()))
+                            .probeId(x.getCustomerId())
                             .score(0)
+                            .probeId(x.getProbeId())
                             .build();
                     probes.add(probeItem);
                 });
