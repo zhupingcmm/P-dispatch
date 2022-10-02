@@ -1,14 +1,11 @@
 package com.mf.server.dispatch.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.mf.dispatch.common.base.ResponseEnum;
 import com.mf.dispatch.common.base.Task;
-import com.mf.dispatch.common.constants.Constants;
 import com.mf.dispatch.common.exception.DispatchException;
 import com.mf.dispatch.common.utils.ObjectTransform;
 import com.mf.server.aware.CalculatorRouter;
 import com.mf.server.calculate.Calculator;
-import com.mf.server.common.CalcResult;
 import com.mf.server.common.Metric;
 import com.mf.server.common.ProbeItem;
 import com.mf.server.dispatch.Dispatch;
@@ -17,17 +14,10 @@ import com.mf.server.mapper.ProbeInfoMapper;
 import com.mf.server.model.ProbeInfoDo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 @Slf4j
