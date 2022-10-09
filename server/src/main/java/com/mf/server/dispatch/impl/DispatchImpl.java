@@ -33,7 +33,11 @@ public class DispatchImpl<T extends Task> implements Dispatch<T> {
     @Override
     public void dispatch(T task) {
 
+        // 转换 probeInfo -> probeItem
         List<ProbeItem> probes = wrap(probeInfoMapper.getProbeList(), task);
+        // 根据 metric 计算出 复合条件 probe 得分
+        // 当前主要采集了 cpu、memory、jvm 的使用效率做metric，
+        // todo 当然在实际的生产系统中， metric 是需要扩展的，比如os信息
         for (ProbeItem probe : probes) {
 
             for (Metric metric : probe.getMetrics()) {
@@ -65,10 +69,18 @@ public class DispatchImpl<T extends Task> implements Dispatch<T> {
         if (probeItem == null) {
             throw new DispatchException(ResponseEnum.NO_AVAILABLE_PROBE);
         }
+        // 设置task probe 的id
         task.setProbeId(probeItem.getProbeId());
+        // 把 task的信息 同步到kafka中
         taskMessage.sendTask(task);
     }
 
+    /**
+     *
+     * @param probeList 数据库里 存储的probe 的信息
+     * @param task 任务信息
+     * @return 转换后的 probeInfo -> probeItem 集合
+     */
     private List<ProbeItem> wrap(List<ProbeInfoDo> probeList, Task task){
         List<ProbeItem> probes = new ArrayList<>();
         probeList.stream()

@@ -33,6 +33,7 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
         try {
             Future<Integer> result = poolExecutor.submit(() -> {
                 // 模拟执行task任务，并且返回执行结果
+                log.info("Executor {} task", taskDo.getTaskName());
                 Thread.sleep(1000);
                 return 1;
             });

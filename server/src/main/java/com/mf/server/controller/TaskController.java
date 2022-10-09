@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TaskController {
 
-    private final TaskService taskService;
+    private final TaskService<Task> taskService;
 
     @GetMapping("/task")
     public BaseResponse<?> addTask() {
 
+        // mock task
         Task task = mockTask();
+        // 添加 task
         taskService.addTask(task);
-        return BaseResponse.success("zp");
+
+        return BaseResponse.success("success");
     }
 
     private Task mockTask(){
