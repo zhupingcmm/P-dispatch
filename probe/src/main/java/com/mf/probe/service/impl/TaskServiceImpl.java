@@ -61,11 +61,6 @@ public class TaskServiceImpl<T extends Task> implements TaskService<T> {
     }
 
 
-    @Override
-    @Transactional
-    public int updateTaskStatus() {
-        return 0;
-    }
 
     @Override
     public List<Task> getTasks() {

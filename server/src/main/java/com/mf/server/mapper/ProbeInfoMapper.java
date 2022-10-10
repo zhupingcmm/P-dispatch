@@ -16,6 +16,12 @@ public interface ProbeInfoMapper {
 
     List<ProbeInfoDo> getProbeList ();
 
+    /**
+     *
+     * @param probeList
+     * @return
+     * 更新 probe 的 转态信息
+     */
     int updateStatus(List<ProbeInfoDo> probeList);
 
 

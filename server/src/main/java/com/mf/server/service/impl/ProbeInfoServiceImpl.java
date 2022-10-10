@@ -127,12 +127,13 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
     @Override
     @Transactional
     public void checkProbeStatus() {
-        // 获取 tb_probe_info 表中 所有的信息， 在一般生产环境上需要分页
+        // 获取 tb_probe_info 表中 所有的信息， 一般在生产环境上需要分页
         List<ProbeInfoDo> probeList = probeInfoMapper.getProbeList();
 
         // 如果 probe 最后更新时间 和当前的系统时间比较小于 10 并且 probe的status是活着的（0） 那就把status字段修改为失联的（1）
         // TODO 这里还可以把 长时间不活动的 probe 直接从数据库中删除
-        probeList = probeList.stream().filter(x -> (System.currentTimeMillis() - x.getUpdateTime().getTime() > 10 * 1000) && x.getStatus() == 0)
+        probeList = probeList.stream()
+                .filter(x -> (System.currentTimeMillis() - x.getUpdateTime().getTime() > 10 * 1000) && x.getStatus() == 0)
                 .collect(Collectors.toList());
         StringBuilder sb = new StringBuilder();
         probeList.forEach(x -> sb.append(x.getProbeId()));

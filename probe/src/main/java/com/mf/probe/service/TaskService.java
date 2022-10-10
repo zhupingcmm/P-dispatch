@@ -18,11 +18,6 @@ public interface TaskService<T extends Task> {
      */
     void addTask(T t);
 
-    /**
-     * 更新任务的状态
-     * @return
-     */
-    int updateTaskStatus();
 
     /**
      * 获取任务队列
