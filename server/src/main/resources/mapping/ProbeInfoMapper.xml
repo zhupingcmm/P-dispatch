@@ -26,10 +26,7 @@
     </select>
     <update id="updateProbeInfo">
         update `server`.tb_probe_info
-        set
-            customer_id = #{customerId},
-            probe_id = #{probeId},
-            update_time = #{updateTime}
+        set customer_id = #{customerId}, status = #{status}
         where id =#{id}
     </update>
     <insert id="insertProbeInfo">
@@ -49,6 +46,12 @@
     <select id="getProbeList" resultMap="ProbeInfoMap">
         select * from `server`.tb_probe_info;
     </select>
+
+
+    <select id="getProbeListByCustomerId" resultMap="ProbeInfoMap">
+        select * from `server`.tb_probe_info where customer_id = #{customerId};
+    </select>
+
     <update id="updateStatus" parameterType="list">
         <foreach collection="list" item="item" index="index">
             update `server`.tb_probe_info

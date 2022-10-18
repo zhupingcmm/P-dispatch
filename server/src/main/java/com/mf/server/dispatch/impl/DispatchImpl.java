@@ -34,7 +34,7 @@ public class DispatchImpl<T extends Task> implements Dispatch<T> {
     public void dispatch(T task) {
 
         // 转换 probeInfo -> probeItem
-        List<ProbeItem> probes = wrap(probeInfoMapper.getProbeList(), task);
+        List<ProbeItem> probes = wrap(probeInfoMapper.getProbeListByCustomerId(task.getCustomerId()), task);
         // 根据 metric 计算出 复合条件 probe 得分
         // 当前主要采集了 cpu、memory、jvm 的使用效率做metric，
         // todo 当然在实际的生产系统中， metric 是需要扩展的，比如os信息

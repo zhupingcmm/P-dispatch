@@ -18,8 +18,8 @@ logging:
   file:
     name: logs/probe.log
 probe:
-  id: 2
-  customer-id: 2
+  id: 1
+  customer-id: 1
   tasks-thread-pool:
     core: 5
     max: 10

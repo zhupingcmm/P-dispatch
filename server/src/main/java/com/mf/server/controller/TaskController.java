@@ -28,8 +28,8 @@ public class TaskController {
 
     private Task mockTask(){
         return Task.builder()
-                .probeId(2)
-                .customerId(2)
+                .probeId(1)
+                .customerId(1)
                 .taskName("run discovery task")
                 .build();
     }

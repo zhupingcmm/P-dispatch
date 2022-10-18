@@ -16,7 +16,8 @@ public enum ResponseEnum {
     RUN_TASK_FAILED(7, "run task failed"),
     METRIC_IMPLEMENT_DO_NOT_EXIT(8, "metric implement do not exit"),
 
-    NO_AVAILABLE_PROBE(9, "no available probe");
+    NO_AVAILABLE_PROBE(9, "no available probe"),
+    SYSTEM_ERROR(10, "system error");
 
     @Getter
     private int code;

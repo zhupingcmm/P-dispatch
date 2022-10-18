@@ -10,6 +10,11 @@ public interface ProbeTaskMapper {
 
     int addProbeTaskInfo(List<ProbeTaskDo> probeTaskDo);
 
+    /**
+     * 更新 task 数据
+     * @param probeTaskDo
+     * @return
+     */
     int updateTaskInfo(List<ProbeTaskDo> probeTaskDo);
 
     List<ProbeTaskDo> getProbeTasksByProbeId(long id);

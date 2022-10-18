@@ -1,6 +1,7 @@
 package com.mf.server.service.impl;
 
 import com.mf.dispatch.common.base.ProbeInfo;
+import com.mf.dispatch.common.utils.Asset;
 import com.mf.dispatch.common.utils.ObjectTransform;
 import com.mf.server.common.Metric;
 import com.mf.server.mapper.*;
@@ -32,96 +33,88 @@ public class ProbeInfoServiceImpl implements ProbeInfoService {
     @Override
     @Transactional
     public void updateProbeInfo(ProbeInfo probeInfo) {
-        // 通过probe id 获取 probe 信息
+        // 通过probe id 获取 probe 信息 （probe_id 已经加了 索引）
        ProbeInfoDo probeInfoDo =  probeInfoMapper.selectProbeInfoByProbeId(probeInfo.getProbeId());
 
        // 如果没有获取到 probe 的信息那就进行插入操作， 如果获取到了 就进行更新操作
        if (probeInfoDo == null) {
 
            // 插入
-           // 1. 插入 数据到 tb_probe_info
+           // 插入 数据到 tb_probe_info
            probeInfoDo = new ProbeInfoDo();
            probeInfoDo.setCustomerId(probeInfo.getCustomerId());
            probeInfoDo.setProbeId(probeInfo.getProbeId());
            probeInfoMapper.insertProbeInfo(probeInfoDo);
            probeInfoDo = probeInfoMapper.selectProbeInfoByProbeId(probeInfo.getProbeId());
 
-           Metric jvmMetric = Metric.builder()
-                   .name("jvm")
-                   .usage(Double.parseDouble(String.format("%.2f", probeInfo.getJvm().getTotal() / probeInfo.getJvm().getMax())))
-                   .build();
-
-           Metric cpuMetric = Metric.builder()
-                   .name("cpu")
-                   .usage(Double.parseDouble(String.format("%.2f", probeInfo.getCpu().getUsed() / probeInfo.getCpu().getTotal())))
-                   .build();
-
-           Metric memory = Metric.builder()
-                   .name("memory")
-                   .usage(Double.parseDouble(String.format("%.2f", probeInfo.getMemory().getUsed()/ probeInfo.getMemory().getTotal())))
-                   .build();
-
-           List<MetricDo> metrics = new ArrayList<>();
-
-           MetricDo jvmMetricDo = ObjectTransform.transform(jvmMetric, MetricDo.class);
-           jvmMetricDo.setProbeInfoId(probeInfoDo.getId());
-           metrics.add(jvmMetricDo);
-
-           MetricDo cpuMetricDo = ObjectTransform.transform(cpuMetric, MetricDo.class);
-           cpuMetricDo.setProbeInfoId(probeInfoDo.getId());
-           metrics.add(cpuMetricDo);
-
-           MetricDo memoryMetricDo = ObjectTransform.transform(memory, MetricDo.class);
-           memoryMetricDo.setProbeInfoId(probeInfoDo.getId());
-           metrics.add(memoryMetricDo);
-
+           // 插入 数据到 tb_dispatch_metric
+           List<MetricDo> metrics = getMetrics(probeInfo, probeInfoDo);
            metricMapper.addMetrics(metrics);
-
-           // 6. 插入到 tb_probe_task_queue
-           List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
-
-           if (!taskDos.isEmpty()) {
-               long probeInfoId = probeInfoDo.getId();
-               taskDos.forEach(x -> x.setProbeInfoId(probeInfoId));
-               taskMapper.addProbeTaskInfo(taskDos);
-           }
-
-
 
        } else {
            // 更新
-           // 1. 更新 tb_probe_info 数据
+           // 更新 tb_probe_info 数据， 现在只更新 customer_id 这个字段数据
            probeInfoDo.setCustomerId(probeInfo.getCustomerId());
-           probeInfoDo.setProbeId(probeInfo.getProbeId());
-           // update time 与 系统时间同步，这个是为了对tb_probe_info status 扫描做准备
-           probeInfoDo.setUpdateTime(new Date(System.currentTimeMillis()));
            probeInfoDo.setStatus(probeInfo.getStatus());
-           probeInfoMapper.updateProbeInfo(probeInfoDo);
+           Asset.singleRowAffected(probeInfoMapper.updateProbeInfo(probeInfoDo));
 
-
-           List<MetricDo> metricDos = probeInfoDo.getMetrics().stream().map(x -> {
-               if (Objects.equals(x.getName(), "jvm")){
-                   x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getJvm().getTotal() / probeInfo.getJvm().getMax())));
-               } else if (x.getName().equals("cpu")) {
-                   x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getCpu().getUsed() / probeInfo.getCpu().getTotal())));
-               } else if (x.getName().equals("memory")){
-                   x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getMemory().getUsed()/ probeInfo.getMemory().getTotal())));
-               }
-               return x;
-           }).collect(Collectors.toList());
-           metricMapper.updateMetrics(metricDos);
-
-           //6. 更新数据到 tb_probe_task_queue
-           List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
-           if (!taskDos.isEmpty()){
-               long probeInfoId = probeInfoDo.getId();
-               taskDos.forEach(x -> x.setProbeInfoId(probeInfoId));
-               taskMapper.updateTaskInfo(taskDos);
-           }
-
-
+           // 计算 metric
+           List<MetricDo> metricDos = calculateMetrics(probeInfo, probeInfoDo);
+           Asset.singleRowAffected(metricMapper.updateMetrics(metricDos));
        }
 
+       // 更新 tb_probe_task_queue 数据
+        List<ProbeTaskDo> taskDos = ObjectTransform.transform(probeInfo.getTaskQueue(), ProbeTaskDo.class);
+        if (!taskDos.isEmpty()) {
+            long probeInfoId = probeInfoDo.getId();
+            taskDos.forEach(x -> x.setProbeInfoId(probeInfoId));
+            Asset.singleRowAffected(taskMapper.addProbeTaskInfo(taskDos));
+        }
+
+    }
+
+    private List<MetricDo> calculateMetrics(ProbeInfo probeInfo, ProbeInfoDo probeInfoDo) {
+        return probeInfoDo.getMetrics().stream().peek(x -> {
+            if (Objects.equals(x.getName(), "jvm")){
+                x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getJvm().getTotal() / probeInfo.getJvm().getMax())));
+            } else if (x.getName().equals("cpu")) {
+                x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getCpu().getUsed() / probeInfo.getCpu().getTotal())));
+            } else if (x.getName().equals("memory")){
+                x.setUsage(Double.parseDouble(String.format("%.2f", probeInfo.getMemory().getUsed()/ probeInfo.getMemory().getTotal())));
+            }
+        }).collect(Collectors.toList());
+    }
+
+    private List<MetricDo> getMetrics(ProbeInfo probeInfo, ProbeInfoDo probeInfoDo) {
+        List<MetricDo> metrics = new ArrayList<>();
+
+        Metric jvmMetric = Metric.builder()
+                .name("jvm")
+                .usage(Double.parseDouble(String.format("%.2f", probeInfo.getJvm().getTotal() / probeInfo.getJvm().getMax())))
+                .build();
+
+        Metric cpuMetric = Metric.builder()
+                .name("cpu")
+                .usage(Double.parseDouble(String.format("%.2f", probeInfo.getCpu().getUsed() / probeInfo.getCpu().getTotal())))
+                .build();
+
+        Metric memory = Metric.builder()
+                .name("memory")
+                .usage(Double.parseDouble(String.format("%.2f", probeInfo.getMemory().getUsed()/ probeInfo.getMemory().getTotal())))
+                .build();
+
+        MetricDo jvmMetricDo = ObjectTransform.transform(jvmMetric, MetricDo.class);
+        jvmMetricDo.setProbeInfoId(probeInfoDo.getId());
+        metrics.add(jvmMetricDo);
+
+        MetricDo cpuMetricDo = ObjectTransform.transform(cpuMetric, MetricDo.class);
+        cpuMetricDo.setProbeInfoId(probeInfoDo.getId());
+        metrics.add(cpuMetricDo);
+
+        MetricDo memoryMetricDo = ObjectTransform.transform(memory, MetricDo.class);
+        memoryMetricDo.setProbeInfoId(probeInfoDo.getId());
+        metrics.add(memoryMetricDo);
+        return metrics;
     }
 
     @Override
